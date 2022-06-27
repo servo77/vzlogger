@@ -243,7 +243,7 @@ void MqttClient::ChannelEntry::generateNames(const std::string &prefix, Channel 
 	_sendAgg = ch.buffer() && ch.buffer()->get_aggmode() != Buffer::aggmode::NONE;
 
 	_fullTopicAgg = _fullTopicRaw;
-	_announceName = _fullTopicRaw;
+	_announceName = prefix + ch.mqtt_measurement_name();
 
 	_fullTopicRaw += "raw";
 	_fullTopicAgg += "agg";
@@ -291,7 +291,8 @@ void MqttClient::publish(Channel::Ptr ch, Reading &rds, bool aggregate) {
 		}
 	}
 
-	std::string &topic = aggregate ? entry._fullTopicAgg : entry._fullTopicRaw;
+	//std::string &topic = aggregate ? entry._fullTopicAgg : entry._fullTopicRaw;
+	std::string &topic = entry._announceName;
 	if ((entry._sendAgg and aggregate) or (entry._sendRaw && !aggregate)) {
 		lock.unlock(); // we can unlock here already
 		std::string payload;
@@ -303,7 +304,7 @@ void MqttClient::publish(Channel::Ptr ch, Reading &rds, bool aggregate) {
 			json_object_object_add(payload_obj, "value", json_object_new_double(rds.value()));
 			payload = json_object_to_json_string(payload_obj);
 		} else {
-			payload = std::to_string(rds.value());
+			payload = ch->mqtt_measurement_int() ? std::to_string((int)rds.value()) : std::to_string(rds.value());
 		}
 
 		print(log_finest, "publish %s=%s", "mqtt", topic.c_str(), payload.c_str());
