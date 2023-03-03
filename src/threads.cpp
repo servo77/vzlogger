@@ -2,7 +2,7 @@
  * Thread implementations
  *
  * @package vzlogger
- * @copyright Copyright (c) 2011, The volkszaehler.org project
+ * @copyright Copyright (c) 2011 - 2023, The volkszaehler.org project
  * @license http://www.gnu.org/licenses/gpl.txt GNU Public License
  * @author Steffen Vogel <info@steffenvogel.de>
  */
@@ -52,9 +52,12 @@ void *reading_thread(void *arg) {
 	size_t n = 0;
 	bool first_reading = true;
 
+	// Only allow cancellation at safe points
+	pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
+	pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, NULL);
+
 	details = meter_get_details(mtr->protocolId());
 	std::vector<Reading> rds(details->max_readings, Reading(mtr->identifier()));
-	;
 
 	print(log_debug, "Number of readers: %d", mtr->name(), details->max_readings);
 	print(log_debug, "Config.local: %d", mtr->name(), options.local());
@@ -62,15 +65,17 @@ void *reading_thread(void *arg) {
 	try {
 		aggIntEnd = time(NULL);
 		do { /* start thread main loop */
+			_safe_to_cancel();
 			do {
 				aggIntEnd += mtr->aggtime(); /* end of this aggregation period */
 			} while ((aggIntEnd < time(NULL)) && (mtr->aggtime() > 0));
 			do { /* aggregate loop */
-
-				if (mtr->interval() > 0 && !first_reading) {
+				_safe_to_cancel();
+				int interval = mtr->interval();
+				if (interval > 0 && !first_reading) {
 					print(log_info, "waiting %i seconds before next reading", mtr->name(),
-						  mtr->interval());
-					sleep(mtr->interval());
+						  interval);
+					_cancellable_sleep(interval);
 				}
 				first_reading = false;
 
