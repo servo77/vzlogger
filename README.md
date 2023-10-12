@@ -27,6 +27,7 @@ Then run the official vzlogger installation:
     sudo bash install.sh
     
 To run installation of the current fork:
+
     cd vzlogger
     ./install.sh vzlogger libjson libsml mqtt clean
 
