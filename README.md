@@ -14,18 +14,22 @@ To install, follow the detailed installation instructions at http://wiki.volksza
 
 If you're impatient you can quickstart using (Debian Bullseye or Ubuntu 18.04 LTS):
 
-    sudo apt-get install build-essential git-core cmake pkg-config subversion libcurl3-dev \
-      libgnutls-dev libsasl2-dev uuid-dev uuid-runtime libtool dh-autoreconf libunistring-dev
+    sudo apt-get install build-essential git-core cmake pkg-config subversion libcurl3-dev gnutls-dev \
+    libsasl2-dev uuid-dev uuid-runtime libtool dh-autoreconf libunistring-dev libssl-dev libgcrypt-dev
 
 If you want to use MQTT support:
 
     sudo apt-get install libmosquitto-dev
 
-Then run the installation:
+Then run the official vzlogger installation:
 
     wget https://raw.github.com/volkszaehler/vzlogger/master/install.sh
     sudo bash install.sh
     
+To run installation of the current fork:
+    cd vzlogger
+    ./install.sh vzlogger libjson libsml mqtt clean
+
 Docker
 ------
 
