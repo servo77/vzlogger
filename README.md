@@ -18,11 +18,16 @@ If you're impatient you can quickstart using (Debian Bookworm or Ubuntu 24.04 LT
         build-essential pkg-config libgnutls28-dev libssl-dev libmosquitto-dev libgcrypt20-dev libcurl3-dev \
     	libunistring-dev libssl-dev libsasl2-dev libcurl4-openssl-dev uuid-dev libtool libltdl-dev
 
-Then run the installation:
+Then run the official vzlogger installation:
 
     wget https://raw.github.com/volkszaehler/vzlogger/master/install.sh
     sudo bash install.sh
     
+To run installation of the current fork:
+
+    cd vzlogger
+    ./install.sh vzlogger libjson libsml mqtt clean
+
 Docker
 ------
 

@@ -86,6 +86,30 @@ Channel::Channel(const std::list<Option> &pOptions, const std::string apiProtoco
 		throw;
 	}
 
+	try {
+		// set mqtt_measurement_name
+		const char *mqtt_measurement_name = optlist.lookup_string(pOptions, "mqtt_measurement_name");
+		std::stringstream oss;
+		oss << mqtt_measurement_name;
+		_mqtt_measurement_name = oss.str();
+	} catch (vz::OptionNotFoundException &e) {
+		// using default value if not specified
+		std::stringstream oss;
+		oss << "chn" << id;
+		_mqtt_measurement_name = oss.str();
+	}
+
+	try {
+		// set mqtt_measurement_int
+		_mqtt_measurement_int = optlist.lookup_bool(pOptions, "mqtt_measurement_int");
+	} catch (vz::OptionNotFoundException &e) {
+		// using default value if not specified
+		_mqtt_measurement_int = false;
+	} catch (vz::VZException &e) {
+		print(log_alert, "Invalid type for mqtt_measurement_int", name());
+		throw;
+	}
+
 	pthread_cond_init(&condition, NULL); // initialize thread syncronization helpers
 }
 

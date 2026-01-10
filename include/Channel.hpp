@@ -73,6 +73,9 @@ class Channel {
 	bool running() const { return _thread_running; }
 
 	const char *name() const { return _name.c_str(); }
+	const char *mqtt_measurement_name() const { return _mqtt_measurement_name.c_str(); }
+	const bool mqtt_measurement_int() const { return _mqtt_measurement_int; }
+	
 	std::list<Option> &options() { return _options; }
 
 	ReadingIdentifier::Ptr identifier() {
@@ -127,6 +130,8 @@ class Channel {
 	std::string _uuid;        // unique identifier for middleware
 	std::string _apiProtocol; // protocol of api to use for logging
 	int _duplicates;          // how to handle duplicate values (see conf)
+	std::string _mqtt_measurement_name; // name of the MQTT measurement
+	bool _mqtt_measurement_int = false;
 };
 
 #endif /* _CHANNEL_H_ */
