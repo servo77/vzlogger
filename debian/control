@@ -14,11 +14,12 @@ Build-Depends: debhelper (>= 12),
  libgcrypt-dev,
  libgnutls28-dev,
  uuid-dev,
- libunistring-dev, 
+ libunistring-dev,
  libgmock-dev,
  libgtest-dev,
  pandoc,
- libmosquitto-dev
+ libmosquitto-dev,
+ libmbus-dev
 Standards-Version: 4.6.2
 Rules-Requires-Root: no
 Homepage: http://wiki.volkszaehler.org/software/controller/vzlogger
